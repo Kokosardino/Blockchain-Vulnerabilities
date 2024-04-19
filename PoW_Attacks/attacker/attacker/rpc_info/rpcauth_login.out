@@ -1,0 +1,4 @@
+String to be appended to bitcoin.conf:
+rpcauth=attacker:5a0f351425a3102cc9f56fbc65686be1$c584e1b7a867197624c53fb5e689aff1cdfc9887ffdba1384b1c2857546497ea
+Your password:
+ILSKrQ6j6olN6LugIUrDqn4Vg5d6LE1g_AifNKzyKTc
