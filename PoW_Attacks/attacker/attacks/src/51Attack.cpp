@@ -124,8 +124,8 @@ int main() {
             "ssh victim2@$IP_VICTIM2 \'bitcoin-cli getnewaddress | tee victim2/addresses/address_$(($(ls -l victim2/addresses | wc -l) - 1)).txt\'");
     std::cout << rang::fg::gray << rang::style::bold << "Addresses for the attack were set as following:" << std::endl
               << "--------------------------------------------------------" << std::endl << rang::fg::blue
-              << "ATTACKER: [" << UTXO.m_address << "]" << std::endl << rang::fg::magenta << "VICTIM1:  ["
-              << victimAddresses.first << "]" << std::endl << "VICTIM2:  [" << victimAddresses.second << "]"
+              << "Attacker: [" << UTXO.m_address << "]" << std::endl << rang::fg::magenta << "Victim1:  ["
+              << victimAddresses.first << "]" << std::endl << "Victim2:  [" << victimAddresses.second << "]"
               << rang::style::reset << std::endl << rang::style::bold << rang::fg::gray
               << "--------------------------------------------------------" << rang::style::reset << std::endl;
 
@@ -175,12 +175,12 @@ int main() {
     }
 
     //Network mines [headStart] blocks.
-    std::cout << rang::fg::gray << rang::style::bold << "Blockchain shared between VICTIM1 and VICTIM2 starts ["
-              << headStart << "] blocks ahead. VICTIM1 mined the blocks with hashes:[";
+    std::cout << rang::fg::gray << rang::style::bold << "Blockchain shared between victim1 and victim2 starts ["
+              << headStart << "] blocks ahead. Victim1 mined the blocks with hashes:[";
     mine("ssh victim1@$IP_VICTIM1", victimAddresses.first, headStart);
 
     std::cout << "]" << std::endl << rang::fg::gray
-              << "Attacker and VICTIM1 now both have transactions spending the same UTXO in their mempools."
+              << "Attacker and victim1 now both have transactions spending the same UTXO in their mempools."
               << std::endl;
     transactionHandler.printTransactions("----------------------ATTACKER----------------------",
                                          "-----------------------VICTIM------------------------",

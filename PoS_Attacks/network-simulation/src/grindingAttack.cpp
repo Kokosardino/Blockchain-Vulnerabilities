@@ -19,7 +19,7 @@
 #define CHARSET_SIZE 15
 
 //Parameters to be freely changed.
-#define NUMBER_OF_NODES 4
+#define NUMBER_OF_NODES 20
 #define NUMBER_OF_TRANSACTIONS_PER_CONSENSUS_ROUND 3
 
 
@@ -237,7 +237,7 @@ void
 grind(CBlockchain &blockchain, const std::vector <CAccount> &currentStakePool, std::vector <std::string> &memPool) {
     bool successfullGrind = false;
 
-    std::cout << rang::fg::magenta << rang::style::bold << "Attacker has [" << memPool.size() + 1
+    std::cout << rang::fg::blue << rang::style::bold << "Attacker has [" << memPool.size() + 1
               << "] transactions in their mempool. They can grind trough " << memPool.size() + 1 << "! permutations."
               << std::endl;
 
@@ -248,12 +248,12 @@ grind(CBlockchain &blockchain, const std::vector <CAccount> &currentStakePool, s
 
     size_t i = 0;
     do {
-        std::cout << rang::fg::magenta << rang::style::bold << "Attacker is trying permutation [" << i << "]."
+        std::cout << rang::fg::blue << rang::style::bold << "Attacker is trying permutation [" << i << "]."
                   << std::endl;
         //Create block with permutated set of transactions and check it against the desired selection.
         CBlock proposedBlock(getBlockHash(blockchain.m_blockchain[blockchain.m_blockchain.size() - 1]), memPoolCopy);
         if (countValidator(getBlockHash(proposedBlock), currentStakePool) == 0) {
-            std::cout << rang::fg::magenta << rang::style::bold << "Attacker found good block hash -> "
+            std::cout << rang::fg::blue << rang::style::bold << "Attacker found good block hash -> "
                       << rang::fg::green << "They are guaranteed to win the next consensus round!" << rang::fg::reset
                       << std::endl;
             //Append block to the blockchain.
@@ -318,7 +318,7 @@ int main() {
             grind(blockchain, currentStakePool, memPool);
         } else {
             std::cout << rang::fg::red << rang::style::bold << "Random node was selected as a block validator."
-                      << std::endl << rang::fg::blue << "Selected block validator is creating a randomized block."
+                      << std::endl << rang::fg::magenta << "Selected block validator is creating a randomized block."
                       << rang::style::reset << std::endl;
             ++networkTotal;
             generateRandomBlock(currentStakePool[validator], blockchain, memPool);
@@ -345,8 +345,8 @@ int main() {
     } else {
         std::cout << rang::fg::red << rang::style::bold << "Attack unsuccessful!" << std::endl;
     }
-    std::cout << rang::fg::magenta << rang::style::bold << "Attacker" << rang::fg::gray << " has created ["
-              << rang::fg::magenta << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::blue
-              << "rest of the network" << rang::fg::gray << " has created [" << rang::fg::blue << networkTotal
+    std::cout << rang::fg::blue << rang::style::bold << "Attacker" << rang::fg::gray << " has created ["
+              << rang::fg::blue << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::magenta
+              << "rest of the network" << rang::fg::gray << " has created [" << rang::fg::magenta << networkTotal
               << rang::fg::gray << "] blocks." << std::endl;
 }

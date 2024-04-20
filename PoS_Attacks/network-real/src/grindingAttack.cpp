@@ -75,9 +75,9 @@ void server(const std::string &username, const std::string &ipAddress, const std
 
     //Set output color.
     if (attacker) {
-        std::cout << rang::fg::magenta << rang::style::bold;
-    } else {
         std::cout << rang::fg::blue << rang::style::bold;
+    } else {
+        std::cout << rang::fg::magenta << rang::style::bold;
     }
 
     //Output the information about the server stopping.
@@ -193,7 +193,7 @@ void generateBlockTo(const std::string &expectedCreator, const std::vector<std::
     nlohmann::json mempoolJson = nlohmann::json::parse(
             sendMessageToIpAddress("listMempool", ipAddresses[creatorIndex], port));
 
-    std::cout << rang::fg::blue << rang::style::bold << "Block creator has [" << mempoolJson.size()
+    std::cout << rang::fg::magenta << rang::style::bold << "Block creator has [" << mempoolJson.size()
               << "] transactions in their mempool." << rang::style::reset << std::endl;
     //Generate random number < mempoolJson.size() representing the amount of transactions embedded into a block.
     int transactionCnt;
@@ -387,7 +387,7 @@ void grind(const std::vector<std::string> &ipAddresses, const std::string port, 
         txids.push_back(unspentTransactionsJson[i]["txid"].get<std::string>());
     }
     std::sort(txids.begin(), txids.end());
-    std::cout << rang::fg::magenta << rang::style::bold << "Attacker has [" << txids.size()
+    std::cout << rang::fg::blue << rang::style::bold << "Attacker has [" << txids.size()
               << "] transactions in their mempool. They can grind through " << txids.size() << "! permutations."
               << rang::style::reset << std::endl;
 
@@ -403,14 +403,14 @@ void grind(const std::vector<std::string> &ipAddresses, const std::string port, 
     bool successfulGrind = false;
     size_t i = 0;
     do {
-        std::cout << rang::fg::magenta << rang::style::bold << "Attacker is trying permutation [" << i << "]."
+        std::cout << rang::fg::blue << rang::style::bold << "Attacker is trying permutation [" << i << "]."
                   << rang::style::reset << std::endl;
         //Create block with permutated set of transactions and check it against the desired index.
         std::string newBlockHash = getBlockHash(lastBlockHash, txids);
         sscanf(newBlockHash.substr(0, 16).c_str(), "%x", &x);
 
         if ((creator + (x % stakepoolJson.size())) % stakepoolJson.size() == searchedIndex) {
-            std::cout << rang::fg::magenta << rang::style::bold
+            std::cout << rang::fg::blue << rang::style::bold
                       << "Attacker found good block hash -> " << rang::fg::green
                       << "They are guaranteed to win the next consensus round!"
                       << rang::style::reset << std::endl;
@@ -591,8 +591,8 @@ int main() {
         std::cout << rang::fg::red << rang::style::bold << "Attack unsuccessful!" << std::endl;
     }
     std::cout << rang::fg::magenta << rang::style::bold << "Attacker" << rang::fg::gray << " has created ["
-              << rang::fg::magenta << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::blue
-              << "rest of the network" << rang::fg::gray << " has created [" << rang::fg::blue << networkTotal
+              << rang::fg::magenta << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::magenta
+              << "rest of the network" << rang::fg::gray << " has created [" << rang::fg::magenta << networkTotal
               << rang::fg::gray << "] blocks." << rang::style::reset << std::endl;
     return 0;
 }

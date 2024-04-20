@@ -87,7 +87,7 @@ int main() {
     std::string txidAttackerSent = transactionHandler.sendTransaction(signedTransactionHexes.second);
     synchronizationGuard.waitForRawTxDelivery("ssh victim2@$IP_VICTIM2 'bitcoin-cli getrawmempool'", txidAttackerSent);
     std::cout << rang::style::bold << rang::fg::gray << "The transaction to attackers' second account with txid ["
-              << txidAttackerSent << "] has been sent to VICTIM2 (representing the rest of the network)."
+              << txidAttackerSent << "] has been sent to victim2 (representing the rest of the network)."
               << rang::style::reset << std::endl;
 
     //Disconnect ATTACKER and VICTIM2. -> All nodes should be disconnected.
@@ -107,7 +107,7 @@ int main() {
     //Send the VICTIM1 transaction for them and save the txid of the created transaction.
     std::string txidVictimSent = transactionHandler.sendTransaction(signedTransactionHexes.first);
     synchronizationGuard.waitForTxDelivery("ssh victim1@$IP_VICTIM1 'bitcoin-cli listtransactions'", txidVictimSent);
-    std::cout << rang::style::bold << rang::fg::gray << "The transaction to VICTIM1 with txid [" << txidVictimSent
+    std::cout << rang::style::bold << rang::fg::gray << "The transaction to victim1 with txid [" << txidVictimSent
               << "] has been sent." << rang::style::reset << std::endl;
 
     //Mine the required number of blocks as an attacker.
@@ -116,7 +116,7 @@ int main() {
               << rang::style::reset;
     std::cin >> preminedBlockCnt;
     std::cout << rang::style::bold << rang::fg::gray << "Attacker is pre-mining [" << preminedBlockCnt
-              << "] blocks and sending them to VICTIM1." << rang::style::reset << std::endl;
+              << "] blocks and sending them to victim1." << rang::style::reset << std::endl;
     mine("bitcoin-cli -generate 1", preminedBlockCnt);
 
     //Delete any previously received services.
@@ -127,8 +127,8 @@ int main() {
     system("ssh victim1@$IP_VICTIM1 \"./scripts/returnService.sh\"");
 
     //Simulate the network mining faster than attacker.
-    std::cout << rang::style::bold << rang::fg::gray << "VICTIM2 (representing the rest of the network) is pre-mining ["
-              << preminedBlockCnt + 1 << "] blocks and sending them to VICTIM1." << rang::style::reset << std::endl;
+    std::cout << rang::style::bold << rang::fg::gray << "Victim2 (representing the rest of the network) is pre-mining ["
+              << preminedBlockCnt + 1 << "] blocks and sending them to victim1." << rang::style::reset << std::endl;
     mine("ssh victim2@$IP_VICTIM2 'bitcoin-cli -generate 1'", preminedBlockCnt + 1);
 
     //Connect back to the VICTIM2.

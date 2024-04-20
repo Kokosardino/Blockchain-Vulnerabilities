@@ -41,9 +41,9 @@ void server(const std::string &username, const std::string &ipAddress, const std
 
     //Set output color.
     if (attacker) {
-        std::cout << rang::fg::magenta << rang::style::bold;
-    } else {
         std::cout << rang::fg::blue << rang::style::bold;
+    } else {
+        std::cout << rang::fg::magenta << rang::style::bold;
     }
 
     //Output the information about the server stopping.
@@ -163,8 +163,8 @@ void showDifferenceInStakes(const std::vector<std::string> &addresses, const std
         }
     }
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
-              << rang::fg::magenta << "Attacker has probability of [" << attacker << "/" << stakePool.size()
-              << "] to be chosen as the next block creator." << std::endl << rang::fg::blue
+              << rang::fg::blue << "Attacker has probability of [" << attacker << "/" << stakePool.size()
+              << "] to be chosen as the next block creator." << std::endl << rang::fg::magenta
               << "Victim1 has probability of [" << victim1 << "/" << stakePool.size()
               << "] to be chosen as the next block creator." << std::endl << "Victim2 has probability of [" << victim2
               << "/" << stakePool.size() << "] to be chosen as the next block creator." << std::endl << rang::fg::gray
@@ -224,7 +224,7 @@ int main() {
     std::string attackerTxid = generateBlockTo(vulncoinAddresses[0], ipAddresses, port);
     sleep(1);
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
-              << rang::fg::magenta <<"Attacker has created the coin of txid [" << attackerTxid << "] they will use for the attack."
+              << rang::fg::blue <<"Attacker has created the coin of txid [" << attackerTxid << "] they will use for the attack."
               << std::endl << rang::fg::gray << "=======================================" << std::endl << rang::style::reset;
 
 
@@ -234,7 +234,7 @@ int main() {
         sleep(1);
     }
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
-              << rang::fg::magenta << "Attacker has generated [" << ROUNDS_TO_AGE << "] blocks, so their coin of txid [" << attackerTxid
+              << rang::fg::blue << "Attacker has generated [" << ROUNDS_TO_AGE << "] blocks, so their coin of txid [" << attackerTxid
               << "] now has staking value [" << ROUNDS_TO_AGE + 1 << "]." << std::endl
               << rang::fg::gray << "=======================================" << rang::style::reset << std::endl;
 
@@ -243,7 +243,7 @@ int main() {
     std::string victim2Txid = generateBlockTo(vulncoinAddresses[2], ipAddresses, port);
 
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
-              << rang::fg::blue << "Victim1 has created coin of txid [" << victim1Txid << "], it now has staking value of [2]."
+              << rang::fg::magenta << "Victim1 has created coin of txid [" << victim1Txid << "], it now has staking value of [2]."
               << std::endl
               << "Victim2 has created coin of txid [" << victim2Txid << "], it now has staking value of [1]."
               << std::endl
@@ -301,9 +301,9 @@ int main() {
         std::cout << rang::fg::red << rang::style::bold << "Attack unsuccessful!" << std::endl;
     }
 
-    std::cout << rang::fg::magenta << rang::style::bold << "Attacker" << rang::fg::gray << " has created ["
-              << rang::fg::magenta << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::blue
-              << "rest of the network" << rang::fg::gray << " has created [" << rang::fg::blue << networkTotal
+    std::cout << rang::fg::blue << rang::style::bold << "Attacker" << rang::fg::gray << " has created ["
+              << rang::fg::blue << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::magenta
+              << "rest of the network" << rang::fg::gray << " has created [" << rang::fg::magenta << networkTotal
               << rang::fg::gray << "] blocks." << rang::style::reset << std::endl;
 
     return 0;
