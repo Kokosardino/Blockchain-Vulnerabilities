@@ -10,7 +10,7 @@ echo "y" | sudo apt install make
 echo "y" | sudo apt install g++
 echo "y" | sudo apt install openssh-server
 echo "y" | sudo apt install sshpass
-echo "y" | sudo apt-get install libsssl-dev
+echo "y" | sudo apt-get install libssl-dev
 
 #Install vulnCoin.
 echo "--------------------"

@@ -8,7 +8,7 @@ echo "------------------------------------------"
 echo "y" | sudo apt install git
 echo "y" | sudo apt install make
 echo "y" | sudo apt install opessh-server
-
+echo "y" | sudo apt-get install libssl-dev
 #Install vulnCoin.
 echo "--------------------"
 echo "Installing vulnCoin!"
