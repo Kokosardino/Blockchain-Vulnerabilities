@@ -263,7 +263,7 @@ void createTransactions(const std::vector<std::string> &ipAddresses, const std::
             std::cout << rang::fg::yellow << rang::style::bold << "UTXO with txid ["
                       << unspentOutputs[0]["txid"].get<std::string>() << "] tied to address ["
                       << unspentOutputs[0]["address"].get<std::string>()
-                      << " has been used to generate transaction with txid [";
+                      << "] has been used to generate transaction with txid [";
 
             std::string newTxid = sendMessageToIpAddress(newTransactionOss.str(), ipAddresses[i], port);
             std::ostringstream printTransactionOss;
