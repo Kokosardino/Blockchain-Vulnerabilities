@@ -30,7 +30,7 @@ ssh-keygen -f ~/.ssh/id_rsa -P "" <<<y > /dev/null 2>&1
 #Set up the rest of the properties.
 rm -r vulnCoin
 
-echo "-------------------------------------------------------------------------------------"
-echo "Network was set up. Modify the IP addresses in ~/attacks/scripts/export_variables.sh!"
-echo "-------------------------------------------------------------------------------------"
+echo "------------------------------------------------------------------------------------"
+echo "Network was set up. Modify the IP addresses in ~/attacks/scripts/exportVariables.sh!"
+echo "------------------------------------------------------------------------------------"
 
