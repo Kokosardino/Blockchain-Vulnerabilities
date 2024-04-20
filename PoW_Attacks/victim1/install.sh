@@ -25,7 +25,7 @@ echo "Setting up rest of the network."
 echo "-------------------------------"
 
 #Create an ssh key. 
-ssh-keygen -f "/home/victim1/.ssh/id_rsa" -P "" <<<y > /dev/null 2>&1
+ssh-keygen -f ~/.ssh/id_rsa -P "" <<<y > /dev/null 2>&1
 
 #Prepare rest of the network information.
 mkdir -p ~/.bitcoin
