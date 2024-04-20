@@ -523,7 +523,7 @@ int main() {
 
     //Create stakepool for the first block.
     createStakes(ipAddresses, port, vulncoinAddresses);
-    std::cout << sendMessageToIpAddress("listStakepool", ipAddresses[0], port) << std::endl;
+    std::cout << sendMessageToIpAddress("listStakepool", ipAddresses[0], port);
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl;
 
     //Variables representing number of blocks mined by attacker/rest of the network.
