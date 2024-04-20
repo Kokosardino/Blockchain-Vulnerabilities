@@ -225,7 +225,7 @@ int main() {
     sleep(1);
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
               << "Attacker has created the coin of txid [" << attackerTxid << "] they will use for the attack."
-              << "=======================================" << std::endl << rang::style::reset;
+              << std::endl << "=======================================" << std::endl << rang::style::reset;
 
 
     //Rounds run to age the attackers coin. -> All the blocks are bound to attacker to ensure that they surely have a coin that is [ROUNDS_TO_AGE] older than others.
@@ -235,7 +235,7 @@ int main() {
     }
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
               << "Attacker has generated [" << ROUNDS_TO_AGE << "] blocks, so their coin of txid [" << attackerTxid
-              << "] now has staking value [" << ROUNDS_TO_AGE << "]." << std::endl
+              << "] now has staking value [" << ROUNDS_TO_AGE + 1 << "]." << std::endl
               << "=======================================" << rang::style::reset << std::endl;
 
     //Generate coins for the victims and save their txids.
