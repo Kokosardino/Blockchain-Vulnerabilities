@@ -9,8 +9,8 @@ PASS_VICTIM1="<INPUT_PASSWORD>"
 PASS_VICTIM2="<INPUT_PASSWORD>"
 
 #Configure ssh.
-sshpass -p "$PASS_VICTIM1" ssh-copy-id -o "StrictHostKeyChecking=no" -i ~/.ssh/id_rsa.pub victim1@$IP_VICTIM1
-sshpass -p "$PASS_VICTIM2" ssh-copy-id -o "StrictHostKeyChecking=no" -i ~/.ssh/id_rsa.pub victim2@$IP_VICTIM2
+(sshpass -p "$PASS_VICTIM1" ssh-copy-id -o "StrictHostKeyChecking=no" -i ~/.ssh/id_rsa.pub victim1@$IP_VICTIM1) &> /dev/null
+(sshpass -p "$PASS_VICTIM2" ssh-copy-id -o "StrictHostKeyChecking=no" -i ~/.ssh/id_rsa.pub victim2@$IP_VICTIM2) &> /dev/null
 
 #Create a fitting bitcoin.conf file, ports are by-default assigned as 18445.
 cp ~/attacker/default_bitcoin.conf ~/.bitcoin/bitcoin.conf
