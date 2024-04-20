@@ -224,8 +224,8 @@ int main() {
     std::string attackerTxid = generateBlockTo(vulncoinAddresses[0], ipAddresses, port);
     sleep(1);
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
-              << "Attacker has created the coin of txid [" << attackerTxid << "] they will use for the attack."
-              << std::endl << "=======================================" << std::endl << rang::style::reset;
+              << rang::fg::magenta <<"Attacker has created the coin of txid [" << attackerTxid << "] they will use for the attack."
+              << std::endl << rang::fg::gray << "=======================================" << std::endl << rang::style::reset;
 
 
     //Rounds run to age the attackers coin. -> All the blocks are bound to attacker to ensure that they surely have a coin that is [ROUNDS_TO_AGE] older than others.
@@ -234,9 +234,9 @@ int main() {
         sleep(1);
     }
     std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
-              << "Attacker has generated [" << ROUNDS_TO_AGE << "] blocks, so their coin of txid [" << attackerTxid
+              << rang::fg::magenta << "Attacker has generated [" << ROUNDS_TO_AGE << "] blocks, so their coin of txid [" << attackerTxid
               << "] now has staking value [" << ROUNDS_TO_AGE + 1 << "]." << std::endl
-              << "=======================================" << rang::style::reset << std::endl;
+              << rang::fg::gray << "=======================================" << rang::style::reset << std::endl;
 
     //Generate coins for the victims and save their txids.
     std::string victim1Txid = generateBlockTo(vulncoinAddresses[1], ipAddresses, port);
