@@ -242,12 +242,12 @@ int main() {
     std::string victim1Txid = generateBlockTo(vulncoinAddresses[1], ipAddresses, port);
     std::string victim2Txid = generateBlockTo(vulncoinAddresses[2], ipAddresses, port);
 
-    std::cout << rang::fg::blue << rang::style::bold << "=======================================" << std::endl
-              << "Victim1 has created coin of txid [" << victim1Txid << "], it now has staking value of [2]."
+    std::cout << rang::fg::gray << rang::style::bold << "=======================================" << std::endl
+              << rang::fg::blue << "Victim1 has created coin of txid [" << victim1Txid << "], it now has staking value of [2]."
               << std::endl
-              << "Victim2 has created coin of txid [" << victim2Txid << "], it now has staking value of [1]"
+              << "Victim2 has created coin of txid [" << victim2Txid << "], it now has staking value of [1]."
               << std::endl
-              << "=======================================" << rang::style::reset << std::endl;
+              << rang::fg::gray << "=======================================" << rang::style::reset << std::endl;
 
     size_t attackerTotal = 0, networkTotal = 0;
     //Start the consensus rounds!
