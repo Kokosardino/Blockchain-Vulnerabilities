@@ -7,7 +7,7 @@ echo "------------------------------------------"
 
 echo "y" | sudo apt install git
 echo "y" | sudo apt install make
-echo "y" | sudo apt install opessh-server
+echo "y" | sudo apt install openssh-server
 echo "y" | sudo apt-get install libssl-dev
 #Install vulnCoin.
 echo "--------------------"
@@ -28,9 +28,9 @@ echo "-----------------------------------"
 ssh-keygen -f ~/.ssh/id_rsa -P "" <<<y > /dev/null 2>&1
 
 #Set up the rest of the properties.
-rm -r vulnCoin
+yes | rm -r vulnCoin
 
-echo "------------------------------------------------------------------------------------"
-echo "Network was set up. Modify the IP addresses in ~/attacks/scripts/exportVariables.sh!"
-echo "------------------------------------------------------------------------------------"
+echo "----------------------------"
+echo "Victim node has been set up!"
+echo "----------------------------"
 
