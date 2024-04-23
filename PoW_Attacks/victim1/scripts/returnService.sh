@@ -40,3 +40,4 @@ for JSON in $(echo "$(bitcoin-cli listtransactions '*' 200)" | jq -c '.[]'); do
 
 	fi
 done
+

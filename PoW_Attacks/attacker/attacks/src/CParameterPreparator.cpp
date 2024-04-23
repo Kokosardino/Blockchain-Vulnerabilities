@@ -151,6 +151,7 @@ transactionInfo CParameterPreparator::chooseUTXO() {
 
             //Generate new block using ipstream to silence the outputs in cmdline. 
             redi::ipstream generateBlock(oss.str().c_str(), redi::pstreams::pstdout | redi::pstreams::pstderr);
+            ++generatedBlocksCount;
         }
 
 
