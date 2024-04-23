@@ -64,8 +64,8 @@ int main() {
                   << "}]\' \'{\"" << addresses.first << "\":" << paidAmmounts.first + paidAmmounts.second - 0.01;
 
     //Generate and sign both transactions. Keep signed hexes as structure <victimTx, attackerTx>
-    std::pair<std::string, std::string> signedTransactionHexes = transactionHandler.createSignedTransactions(
-            txVictimOss, txAttackerOss);
+    std::pair<std::string, std::string> signedTransactionHexes = std::make_pair(transactionHandler.createSignedTransaction(txVictimOss), 
+		    								transactionHandler.createSignedTransaction(txAttackerOss));
 
     //Send the victim transaction to the VICTIM1 and save the txid of the created transaction.
     std::string txidVictimSent = transactionHandler.sendTransaction(signedTransactionHexes.first);

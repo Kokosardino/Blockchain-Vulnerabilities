@@ -20,14 +20,22 @@ std::string CParameterPreparator::chooseAddress() {
         oss.str(std::string());
         oss << "/home/attacker/attacker/addresses/address_" << addressCount << ".txt";
     }
-    std::cout << rang::fg::gray << rang::style::bold
-              << "Select an address from the listed by typing the number representing it, or type \"generate\" to generate a new address to be used: "
-              << rang::style::reset;
-
-    //Get the response.
+    
     std::string decision;
-    std::cin >> decision;
+    if(addressCount == 0){
+	std::cout << rang::fg::gray << rang::style::bold
+              	<< "No usable addresses exist, generating a brand new one!"
+              	<< rang::style::reset << std::endl;
+	    decision = "generate";
+    } else {
+    	std::cout << rang::fg::gray << rang::style::bold
+              	<< "Select an address from the listed by typing the number representing it, or type \"generate\" to generate a new address to be used: "
+              	<< rang::style::reset;
 
+    	//Get the response.
+    	std::cin >> decision;
+    }
+	
     //Act accordingly to the decision.
     if (decision == "generate") {
         std::ostringstream oss;

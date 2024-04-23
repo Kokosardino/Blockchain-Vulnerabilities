@@ -144,8 +144,8 @@ int main() {
                   << "}]\' \'{\"" << UTXO.m_address << "\":" << paidAmmounts.first + paidAmmounts.second - 0.01;
 
     //Generate signed hexes of the passed transation strings.
-    std::pair<std::string, std::string> signedTxHexes = transactionHandler.createSignedTransactions(txVictimOss,
-                                                                                                    txAttackerOss);
+    std::pair<std::string, std::string> signedTxHexes = std::make_pair(transactionHandler.createSignedTransaction(txVictimOss),
+                                                                       transactionHandler.createSignedTransaction(txAttackerOss));
 
     //Send the transaction for the VICTIM1 to the network and wait for its' delivery.
     std::string sentVictimTxid = transactionHandler.sendTransaction(signedTxHexes.first);
@@ -240,7 +240,7 @@ int main() {
         sleep(DELAY_SEC);
     }
 
-    std::cout << rang::fg::gray << "Transaction issued to victim should no longer exist:" << rang::style::reset
+    std::cout << rang::fg::gray << rang::style::bold << "Transaction issued to victim should no longer exist:" << rang::style::reset
               << std::endl;
     transactionHandler.printTransactions("----------------------ATTACKER----------------------",
                                          "-----------------------VICTIM------------------------",

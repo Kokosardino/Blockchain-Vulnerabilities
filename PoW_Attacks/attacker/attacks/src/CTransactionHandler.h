@@ -20,11 +20,10 @@ public:
     CTransactionHandler() = default;
 
     /**
-     * Function that appends encoded information data segment with attacker information into transactions, creates and signs them.
-     * Returnes hexes of the signed transactions.
+     * Function that appends encoded information data segment with attacker information into transaction, creates and signs it.
+     * Returnes hex of the signed transaction.
      */
-    std::pair<std::string, std::string>
-    createSignedTransactions(std::ostringstream &tx1Oss, std::ostringstream &tx2Oss);
+    std::string createSignedTransaction(std::ostringstream &txOss);
 
     /**
      * Function to broadcast raw transaction into the network.

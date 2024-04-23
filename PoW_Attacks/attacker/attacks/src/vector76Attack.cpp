@@ -73,8 +73,8 @@ int main() {
                   << "}]\' \'{\"" << addresses.second << "\":" << paidAmmounts.first + paidAmmounts.second;
 
     //Generate and sign both transactions. Keep signed hexes as structure <victimTx, attackerTx>.
-    std::pair<std::string, std::string> signedTransactionHexes = transactionHandler.createSignedTransactions(
-            txVictimOss, txAttackerOss);
+    std::pair<std::string, std::string> signedTransactionHexes = std::make_pair(transactionHandler.createSignedTransaction(txVictimOss), 
+		    								transactionHandler.createSignedTransaction(txAttackerOss));
 
     //Disconnect from VICTIM1.
     system("bitcoin-cli addnode $IP_VICTIM1:18445 remove; bitcoin-cli disconnectnode $IP_VICTIM1:18445");

