@@ -28,13 +28,14 @@
  * Thread function that runs the server on specified ip address in the background.
  * @param username Username to login into remote system with via ssh.
  * @param ipAddress IP address of the target of ssh.
+ * @param entropy A random string used as entropy source for vulnCoin address.
  * @param port Port on which the server will be run.
  * @param attacker Specifies whether thread is an attacker or not for the purposes of output coloring.
  */
-void server(const std::string &username, const std::string &ipAddress, const std::string &port, const bool attacker) {
+void server(const std::string &username, const std::string &ipAddress, const unsigned int &entropy, const std::string &port, const bool attacker) {
     //Create the command for connecting to remote system and running the server with coin age property set to true.
     std::ostringstream oss;
-    oss << "ssh " << username << "@" << ipAddress << " '(vulnCoin-server " << port << " 1)&'" << std::endl;
+    oss << "ssh " << username << "@" << ipAddress << " '(vulnCoin-server " << entropy << " " << port << " 1)&'" << std::endl;
 
     //Start the server.
     system(oss.str().c_str());
@@ -185,13 +186,21 @@ int main() {
             {"attacker", "victim1", "victim2"});
     std::string port(std::getenv("PORT"));
 
-    //Run servers in separate threads. Sleeps guarantee that random addresses are generated for each of the servers.
+    //Generate three random unique numbers to guarantee that different addresses are created for each of the servers.
+    std::vector<unsigned int> entropyVector;
+    for(int i = 0; i < 3; ++i){
+            int random = std::rand();
+            while(std::find(entropyVector.begin(), entropyVector.end(), random) != entropyVector.end()){
+                random = std::rand();
+            }
+            entropyVector.push_back(random);
+    }
+
+    //Run servers in separate threads. 
     std::vector<std::thread> threads;
-    threads.emplace_back(std::thread(server, std::ref(usernames[0]), std::ref(ipAddresses[0]), std::ref(port), true));
-    sleep(1);
-    threads.emplace_back(std::thread(server, std::ref(usernames[1]), std::ref(ipAddresses[1]), std::ref(port), false));
-    sleep(1);
-    threads.emplace_back(std::thread(server, std::ref(usernames[2]), std::ref(ipAddresses[2]), std::ref(port), false));
+    threads.emplace_back(std::thread(server, std::ref(usernames[0]), std::ref(ipAddresses[0]), std::ref(entropyVector[0]), std::ref(port), true));
+    threads.emplace_back(std::thread(server, std::ref(usernames[1]), std::ref(ipAddresses[1]), std::ref(entropyVector[1]), std::ref(port), false));
+    threads.emplace_back(std::thread(server, std::ref(usernames[2]), std::ref(ipAddresses[2]), std::ref(entropyVector[2]), std::ref(port), false));
 
     //Ensure that all servers are running. If [5] tries have happened, stop the applications.
     size_t timeoutCnt = 0;

@@ -62,13 +62,14 @@ std::string sha256(const std::string stringToHash) {
  * Thread function that runs the server on specified ip address in the background.
  * @param username Username to login into remote system with via ssh.
  * @param ipAddress IP address of the target of ssh.
+ * @param entropy The string servers generate vulnCoin address from.
  * @param port Port on which the server will be run.
  * @param attacker Specifies whether thread is an attacker or not for the purposes of output coloring.
  */
-void server(const std::string &username, const std::string &ipAddress, const std::string &port, const bool attacker) {
+void server(const std::string &username, const std::string &ipAddress, const unsigned int &entropy, const std::string &port, const bool attacker) {
     //Create the command for connecting to remote system and running the server.
     std::ostringstream oss;
-    oss << "ssh " << username << "@" << ipAddress << " '(vulnCoin-server " << port << " 0)&'" << std::endl;
+    oss << "ssh " << username << "@" << ipAddress << " '(vulnCoin-server " << entropy << " " << port << " 0)&'" << std::endl;
 
     //Start the server.
     system(oss.str().c_str());
@@ -132,48 +133,6 @@ void stopServers(const std::vector<std::string> &ipAddresses, const std::string 
 }
 
 /**
- * Function to randomly generate a block containing ONLY a coinbase transaction.
- * @param ipAddresses Non-empty vector of IP addresses of all servers.
- * @param port Port on which the servers communicate.
- * @return Position of the block creator in the "ipAddresses" vector.
- */
-int generateRandomBlock(std::vector<std::string> ipAddresses, const std::string &port) {
-    //Generate randomly position of the block creator.
-    int randomPos = std::rand() % ipAddresses.size();
-
-    //Save the selected IP and erase it from the vector.
-    std::string randomlyChosenIp = ipAddresses[randomPos];
-    std::vector<std::string>::iterator it = ipAddresses.begin();
-    std::advance(it, randomPos);
-    ipAddresses.erase(it);
-
-    //Generate the block.
-    sendMessageToIpAddress("generate", randomlyChosenIp, port);
-
-    //Parse transaction ID of the coinbase transaction.
-    std::string blockchain = sendMessageToIpAddress("printBlockchain", randomlyChosenIp, port);
-    nlohmann::json unspentOutputs = nlohmann::json::parse(blockchain);
-    std::string coinbaseTxid = unspentOutputs[unspentOutputs.size() - 1]["transactions"][0];
-    std::ostringstream commandPrint;
-    commandPrint << "printTransaction " << coinbaseTxid;
-    nlohmann::json coinbaseTransactionJson = nlohmann::json::parse(
-            sendMessageToIpAddress(commandPrint.str(), randomlyChosenIp, port));
-
-    //Send the newly created coinbase transaction and block to remaining network participants.
-    std::ostringstream commandLoad, commandPropose;
-    commandLoad << "loadCoinbaseTransaction " << coinbaseTransactionJson["address"].get<std::string>() << " "
-                << coinbaseTransactionJson["timestamp"].get<std::string>();
-    commandPropose << "proposeBlock {" << coinbaseTxid << "}";
-    for (const std::string &address: ipAddresses) {
-        sendMessageToIpAddress(commandLoad.str(), address, port);
-        sendMessageToIpAddress(commandPropose.str(), address, port);
-    }
-
-    //Return index of the block creator in the "ipAddresses" vector.
-    return randomPos;
-}
-
-/**
  * Generate randomized block containing random number of transactions from the mempool and a coinbase transaction assigned to the creator specified by address.
  * @param expectedCreator vulnCoin address of the block creator.
  * @param ipAddresses IP addresses of all servers in the network.
@@ -192,9 +151,7 @@ void generateBlockTo(const std::string &expectedCreator, const std::vector<std::
     //Parse mempool of the block creator as JSON.
     nlohmann::json mempoolJson = nlohmann::json::parse(
             sendMessageToIpAddress("listMempool", ipAddresses[creatorIndex], port));
-
-    std::cout << rang::fg::magenta << rang::style::bold << "Block creator has [" << mempoolJson.size()
-              << "] transactions in their mempool." << rang::style::reset << std::endl;
+    
     //Generate random number < mempoolJson.size() representing the amount of transactions embedded into a block.
     int transactionCnt;
     if (mempoolJson.size() > 0) {
@@ -221,7 +178,6 @@ void generateBlockTo(const std::string &expectedCreator, const std::vector<std::
         sendMessageToIpAddress(commandLoad.str(), ipAddresses[i], port);
         sendMessageToIpAddress(commandPropose.str(), ipAddresses[i], port);
     }
-
 }
 
 /**
@@ -408,7 +364,7 @@ void grind(const std::vector<std::string> &ipAddresses, const std::string port, 
         //Create block with permutated set of transactions and check it against the desired index.
         std::string newBlockHash = getBlockHash(lastBlockHash, txids);
         sscanf(newBlockHash.substr(0, 16).c_str(), "%x", &x);
-
+	
         if ((creator + (x % stakepoolJson.size())) % stakepoolJson.size() == searchedIndex) {
             std::cout << rang::fg::blue << rang::style::bold
                       << "Attacker found good block hash -> " << rang::fg::green
@@ -473,13 +429,21 @@ int main() {
             {"attacker", "victim1", "victim2"});
     std::string port(std::getenv("PORT"));
 
-    //Run servers in separate threads. Sleeps guarantee that random addresses are generated for each of the servers.
+    //Generate three random unique numbers to guarantee that different addresses are created for each of the servers.
+    std::vector<unsigned int> entropyVector;
+    for(int i = 0; i < 3; ++i){
+	    int random = std::rand();
+	    while(std::find(entropyVector.begin(), entropyVector.end(), random) != entropyVector.end()){
+		random = std::rand();
+	    }
+	    entropyVector.push_back(random);
+    }
+
+    //Run servers in separate threads. 
     std::vector<std::thread> threads;
-    threads.emplace_back(std::thread(server, std::ref(usernames[0]), std::ref(ipAddresses[0]), std::ref(port), true));
-    sleep(1);
-    threads.emplace_back(std::thread(server, std::ref(usernames[1]), std::ref(ipAddresses[1]), std::ref(port), false));
-    sleep(1);
-    threads.emplace_back(std::thread(server, std::ref(usernames[2]), std::ref(ipAddresses[2]), std::ref(port), false));
+    threads.emplace_back(std::thread(server, std::ref(usernames[0]), std::ref(ipAddresses[0]), std::ref(entropyVector[0]), std::ref(port), true));
+    threads.emplace_back(std::thread(server, std::ref(usernames[1]), std::ref(ipAddresses[1]), std::ref(entropyVector[1]), std::ref(port), false));
+    threads.emplace_back(std::thread(server, std::ref(usernames[2]), std::ref(ipAddresses[2]), std::ref(entropyVector[2]), std::ref(port), false));
 
     //Ensure that all servers are running. If [5] tries have happened, stop the applications.
     size_t timeoutCnt = 0;
@@ -512,7 +476,9 @@ int main() {
     std::cout << rang::fg::gray << rang::style::bold << "Generating [" << PREGENERATED_BLOCKS << "] blocks randomly:"
               << std::endl << "=======================================" << std::endl;
     for (size_t i = 0; i < PREGENERATED_BLOCKS; ++i) {
-        std::cout << "Block [" << i << "] was generated by [" << usernames[generateRandomBlock(ipAddresses, port)]
+	int random = std::rand() % 3;
+	generateBlockTo(vulncoinAddresses[random], ipAddresses, vulncoinAddresses, port);
+        std::cout << "Block [" << i << "] was generated by [" << usernames[random]
                   << "]." << std::endl;
         sleep(1);
     }
@@ -573,7 +539,9 @@ int main() {
             std::cout << rang::fg::gray << rang::style::bold << "======================================="
                       << rang::style::reset << std::endl;
         }
-
+	
+	//Sleep for better readability.
+	sleep(1);
     }
 
     //Stop all the servers.
@@ -590,8 +558,8 @@ int main() {
     } else {
         std::cout << rang::fg::red << rang::style::bold << "Attack unsuccessful!" << std::endl;
     }
-    std::cout << rang::fg::magenta << rang::style::bold << "Attacker" << rang::fg::gray << " has created ["
-              << rang::fg::magenta << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::magenta
+    std::cout << rang::fg::blue << rang::style::bold << "Attacker" << rang::fg::gray << " has created ["
+              << rang::fg::blue << attackerTotal << rang::fg::gray << "] blocks, while " << rang::fg::magenta
               << "rest of the network" << rang::fg::gray << " has created [" << rang::fg::magenta << networkTotal
               << rang::fg::gray << "] blocks." << rang::style::reset << std::endl;
     return 0;
