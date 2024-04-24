@@ -15,7 +15,7 @@ echo "Installing bitcoin core."
 echo "------------------------"
 
 touch bitcoin.tar.gz
-curl 'https://bitcoin.org/bin/bitcoin-core-25.0/bitcoin-25.0-x86_64-linux-gnu.tar.gz' --output bitcoin.tar.gz
+curl 'https://bitcoincore.org/bin/bitcoin-core-25.0/bitcoin-25.0-x86_64-linux-gnu.tar.gz' --output bitcoin.tar.gz
 tar -xvf bitcoin.tar.gz
 sudo install -m 0755 -o root -g root -t /usr/local/bin bitcoin-25.0/bin/*
 rm -r bitcoin-25.0 bitcoin.tar.gz
