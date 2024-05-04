@@ -9,9 +9,9 @@ Attacks are tested to function correctly on devices running Ubuntu `22.04` OS, b
 	<ul>
 		<li>Recommended approach. Prepared virtual machines contain the whole testing environment.
 		<ol>
-			<li><a href="">Attacker</a></li>
-			<li><a href="">Victim1</a></li>
-			<li><a href="">Victim2</a></li>
+			<li><a href="https://drive.google.com/file/d/1HVkepO7HxPVoy-m7bZKDLM-6-YwXo6Yk/view?usp=sharing">Attacker</a></li>
+			<li><a href="https://drive.google.com/file/d/11KOadLxpXeOh8ngwCxDh9kcufj4MIhpW/view?usp=sharing">Victim1</a></li>
+			<li><a href="https://drive.google.com/file/d/1Du0rF0998bvuVo6-fJRVqO4c61KRIMf6/view?usp=sharing">Victim2</a></li>
 		</ol> 
 		</li>
 	</ul>
