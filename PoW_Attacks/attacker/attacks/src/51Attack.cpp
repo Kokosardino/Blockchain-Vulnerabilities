@@ -89,7 +89,7 @@ void minerThread(const std::vector<std::string> ssh, const std::vector<std::stri
     }
 
     //Lock the minerCnt variable (very definsive programming, should not be necssarily needed).
-    std::lock_guard<std::mutex> locker(mtxMining);
+    std::lock_guard<std::mutex> locker(mtxMinerCnt);
     --minerCnt;
 }
 

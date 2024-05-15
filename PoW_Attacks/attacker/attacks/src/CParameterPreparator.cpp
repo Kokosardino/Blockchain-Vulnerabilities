@@ -225,6 +225,7 @@ CParameterPreparator::calculateAmmounts(const transactionInfo &UTXO, const float
                   << rang::style::reset << std::endl;
         exit(1);
     } else {
+        //Default fee for the payment is set as 0.1
         returnAmmount = UTXO.m_btcValue - paidAmmount - 0.1;
     }
 

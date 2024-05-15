@@ -283,9 +283,9 @@ void createStakes(const std::vector<std::string> &ipAddresses, const std::string
 
 /**
  * Count hash of the block based on hash of the previous block and transaction vector.
- * @param prevBlockHash
- * @param transactions Vector of transactions to be embedded into a block. **
- * @return
+ * @param prevBlockHash Hash of the previous block.
+ * @param transactions Vector of transactions to be embedded into a block.
+ * @return sha256 hash of the requested block.
  */
 std::string getBlockHash(const std::string prevBlockHash, const std::vector<std::string> &transactions) {
     std::ostringstream transactionOss, blockOss;
